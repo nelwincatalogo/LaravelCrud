@@ -1,100 +1,66 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layout.main')
+@section('content')
 
-        <title>Laravel</title>
+<div>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+    <h1 class="text-center mt-5">Home Page</h1>
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
+    <div class="container">
+        <div class="row justify-content-center my-5">
+            <div class="col-9">
+                @if (session('successMsg'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('successMsg') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            @endif
+                @endif
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($students as $student)
+                        <tr>
+                            <th scope="row">{{ $student->id }}</th>
+                            <td>{{ $student->first_name }}</td>
+                            <td>{{ $student->last_name }}</td>
+                            <td>{{ $student->email }}</td>
+                            <td>{{ $student->phone }}</td>
+                            <td>
+                                <a class="btn btn-flat btn-sm btn-green" href="{{ route('edit', $student->id) }}"><i class="fas fa-pen white-text"></i></a>
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
+                                <form style="display: none;" method="POST" id="delete-form-{{ $student->id }}" action="{{ route('delete', $student->id) }}">
+                                    {{ csrf_field() }}
+                                    {{ method_field('delete') }}
+                                </form>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
+
+                                <!-- Button trigger modal-->
+                                <button onclick="if (confirm('Are you sure to delete this data?')) {
+                                    event.preventDefault();
+                                    document.getElementById('delete-form-{{ $student->id }}').submit();
+                                }else {
+                                    event.preventDefault();
+                                }" class="btn btn-flat btn-sm btn-red ml-2" data-toggle="modal" data-target="#modalPush"><i class="fas fa-trash white-text"></i></button>
+
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
-    </body>
-</html>
+    </div>
+
+</div>
+
+@endsection
