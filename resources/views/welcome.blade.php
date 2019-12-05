@@ -3,7 +3,7 @@
 
 <div>
 
-    <h1 class="text-center mt-5">Home Page</h1>
+    <h1 class="text-center mt-5">Student List</h1>
 
     <div class="container">
         <div class="row justify-content-center my-5">
@@ -57,9 +57,12 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="mx-auto mt-5" style="width: 120px;">{{ $students->links() }}</div>
             </div>
         </div>
     </div>
+
+
 
 </div>
 
